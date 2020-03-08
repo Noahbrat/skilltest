@@ -15,7 +15,7 @@ export default {
       }
   },
   methods: {
-    getStories: function () {
+    getStories() {
       fetch('https://hacker-news.firebaseio.com/v0/newstories.json')
           .then((response) => {
               return response.json();
