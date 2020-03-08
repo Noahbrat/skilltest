@@ -7,27 +7,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>WHCC Hacker News Reader</title>
-    <script type="text/javascript">
-        function getStories() {
-            fetch('https://hacker-news.firebaseio.com/v0/newstories.json')
-                .then((response) => {
-                    return response.json();
-                })
-                .then((myJson) => {
-                    document.getElementById("stories").innerHTML = myJson;
-                });
-        }
-        getStories();
-    </script>
 </head>
 
 <body>
     <noscript>
         <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <h1>WHCC Hacker News Reader</h1>
     <div id="app">
-        <div id="stories"></div>
     </div>
 </body>
 
