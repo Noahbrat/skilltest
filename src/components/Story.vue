@@ -1,39 +1,30 @@
 <template>
-  <div id="stories">
-      <Story v-for="storyId in storyIds" :key="storyId"
-        :story-id="storyId"
-      />
+  <div class="story">
+      {{storyId}}
   </div>
 </template>
 
 <script>
-import Story from './Story.vue';
-
 export default {
-  name: 'Stories',
-  components: {
-    Story
-  },
-  props: {
-  },
+  name: 'Story',
+  props: ['storyId'],
   data: function () {
       return {
-        storyIds: [],
+        story: {},
       }
   },
   methods: {
-    getStories() {
-      fetch('https://hacker-news.firebaseio.com/v0/newstories.json')
+    getStory() {
+      fetch(`https://hacker-news.firebaseio.com/v0/item/${this.storyId}.json`)
           .then((response) => {
               return response.json();
           })
           .then((myJson) => {
-              this.storyIds = myJson;
+              this.story = myJson;
           });
       }
   },
   created: function () {
-    this.getStories();
   }
 }
 </script>
