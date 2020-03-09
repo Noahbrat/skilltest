@@ -1,7 +1,9 @@
 <template>
   <div id="stories">
-      <Story v-for="storyId in storyIds" :key="storyId"
+      <Story v-for="(storyId, index) in storyIds" :key="storyId"
         :story-id="storyId"
+        :showIt="showIt(index)"
+        v-on:is-shown="isShown(storyId)"
       />
   </div>
 </template>
@@ -19,6 +21,7 @@ export default {
   data: function () {
       return {
         storyIds: [],
+        shownIds: [],
       }
   },
   methods: {
@@ -30,7 +33,13 @@ export default {
           .then((myJson) => {
               this.storyIds = myJson;
           });
-      }
+    },
+    showIt(index) {
+      return index == 0 || this.shownIds.includes(this.storyIds[index - 1]);
+    },
+    isShown(id) {
+      this.shownIds.push(id);
+    }
   },
   created: function () {
     this.getStories();

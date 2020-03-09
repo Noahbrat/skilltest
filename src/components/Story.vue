@@ -5,11 +5,7 @@
             <span class="author"> by {{story.by}}</span>
             <span class="time"> at {{new Date(story.time * 1000) | dateFormat('h:mma')}}</span>
       </div>
-      <div v-else class="hidden-story" v-observe-visibility="{
-            callback: visibilityChanged,
-            threshold: 0.3,
-            once: true,
-        }">
+      <div v-else-if="this.showIt" class="story-loader" v-observe-visibility="visibilityChanged">
           {{storyId}}
       </div>
   </div>
@@ -24,15 +20,17 @@ Vue.use(VueObserveVisibility);
 
 export default {
   name: 'Story',
-  props: ['storyId'],
+  props: ['storyId', 'showIt'],
   data: function () {
       return {
         story: {},
       }
   },
   methods: {
-    visibilityChanged() {
-        this.getStory();
+    visibilityChanged(isVisible) {
+        if (isVisible) {
+            this.getStory();
+        }
     },
     getStory() {
       fetch(`https://hacker-news.firebaseio.com/v0/item/${this.storyId}.json`)
@@ -41,8 +39,9 @@ export default {
           })
           .then((myJson) => {
               this.story = myJson;
+              this.$emit('is-shown')
           });
-      }
+    }
   }
 }
 </script>
@@ -72,6 +71,13 @@ a {
     font-size: 1.5em;
     color: green;
     text-decoration: none;
+}
+
+.story-loader {
+    font-size: 2em;
+    padding: .5em;
+    margin: .5em;
+    color: white;
 }
 
 </style>
