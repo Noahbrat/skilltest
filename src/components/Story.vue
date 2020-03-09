@@ -2,10 +2,14 @@
   <div v-on:click.stop="getStory()">
       <div v-if="story.id" class="story">
           <a :href="story.url" target="_blank">{{story.title}}</a>
-            &nbsp;<span class="author">by {{story.by}}</span>
-            &nbsp;<span class="time">{{new Date(story.time * 1000) | dateFormat('h:mma')}}</span>
+            <span class="author"> by {{story.by}}</span>
+            <span class="time"> at {{new Date(story.time * 1000) | dateFormat('h:mma')}}</span>
       </div>
-      <div v-else class="hidden-story">
+      <div v-else class="hidden-story" v-observe-visibility="{
+            callback: visibilityChanged,
+            threshold: 0.3,
+            once: true,
+        }">
           {{storyId}}
       </div>
   </div>
@@ -14,7 +18,9 @@
 <script>
 import Vue from 'vue';
 import VueFilterDateFormat from 'vue-filter-date-format';
+import VueObserveVisibility from 'vue-observe-visibility'
 Vue.use(VueFilterDateFormat);
+Vue.use(VueObserveVisibility);
 
 export default {
   name: 'Story',
@@ -25,6 +31,9 @@ export default {
       }
   },
   methods: {
+    visibilityChanged() {
+        this.getStory();
+    },
     getStory() {
       fetch(`https://hacker-news.firebaseio.com/v0/item/${this.storyId}.json`)
           .then((response) => {
@@ -52,9 +61,11 @@ export default {
 .author {
     font-style: italic;
     color: navy;
+    white-space: nowrap;
 }
 .time {
-    color: navy
+    color: navy;
+    white-space: nowrap;
 }
 
 a {
